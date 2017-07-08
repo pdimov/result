@@ -11,6 +11,7 @@
 #include <boost/config.hpp>
 #include <system_error>
 #include <type_traits>
+#include <string>
 #include <cassert>
 
 //
@@ -86,10 +87,18 @@ std::system_error error_code_to_exception( std::error_code const & e )
 
 // in_place_*
 
-struct in_place_value_t {};
+struct in_place_value_t
+{
+    in_place_value_t() = default;
+};
+
 constexpr in_place_value_t in_place_value;
 
-struct in_place_error_t {};
+struct in_place_error_t
+{
+    in_place_error_t() = default;
+};
+
 constexpr in_place_error_t in_place_error;
 
 // result
