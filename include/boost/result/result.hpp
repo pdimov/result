@@ -30,7 +30,12 @@ enum class result_errc
 } // namespace result
 } // namespace boost
 
-template<> struct std::is_error_code_enum< boost::result::result_errc >: std::true_type {};
+namespace std
+{
+
+template<> struct is_error_code_enum< boost::result::result_errc >: std::true_type {};
+
+} // namespace std
 
 namespace boost
 {
@@ -149,8 +154,8 @@ public:
         !std::is_constructible<E, A>::value
         >::type>
     explicit constexpr result( A&& a )
-		noexcept( std::is_nothrow_constructible<T, A>::value )
-		: i_( which::value ), v_( in_place_value_t(), std::forward<A>(a) )
+        noexcept( std::is_nothrow_constructible<T, A>::value )
+        : i_( which::value ), v_( in_place_value_t(), std::forward<A>(a) )
     {
     }
 
@@ -161,8 +166,8 @@ public:
         !std::is_constructible<T, A>::value
         >::type>
     explicit constexpr result( A&& a )
-		noexcept( std::is_nothrow_constructible<E, A>::value )
-		: i_( which::error ), v_( in_place_error_t(), std::forward<A>(a) )
+        noexcept( std::is_nothrow_constructible<E, A>::value )
+        : i_( which::error ), v_( in_place_error_t(), std::forward<A>(a) )
     {
     }
 
@@ -173,7 +178,7 @@ public:
         >::type>
     constexpr result( A&& a )
         noexcept( std::is_nothrow_constructible<T, A>::value )
-		: i_( which::value ), v_( in_place_value_t(), std::forward<A>(a) )
+        : i_( which::value ), v_( in_place_value_t(), std::forward<A>(a) )
     {
     }
 
@@ -184,7 +189,7 @@ public:
         >::type>
     constexpr result( A&& a )
         noexcept( std::is_nothrow_constructible<E, A>::value )
-		: i_( which::error ), v_( in_place_error_t(), std::forward<A>(a) )
+        : i_( which::error ), v_( in_place_error_t(), std::forward<A>(a) )
     {
     }
 
@@ -196,7 +201,7 @@ public:
         >::type>
     constexpr result( A&&... a )
         noexcept( std::is_nothrow_constructible<T, A...>::value )
-		: i_( which::value ), v_( in_place_value_t(), std::forward<A>(a)... )
+        : i_( which::value ), v_( in_place_value_t(), std::forward<A>(a)... )
     {
     }
 
@@ -208,7 +213,7 @@ public:
         >::type>
     constexpr result( A&&... a )
         noexcept( std::is_nothrow_constructible<E, A...>::value )
-		: i_( which::error ), v_( in_place_error_t(), std::forward<A>(a)... )
+        : i_( which::error ), v_( in_place_error_t(), std::forward<A>(a)... )
     {
     }
 
@@ -218,7 +223,7 @@ public:
         >::type>
     constexpr result( in_place_value_t, A&&... a )
         noexcept( std::is_nothrow_constructible<T, A...>::value )
-		: i_( which::value ), v_( in_place_value_t(), std::forward<A>(a)... )
+        : i_( which::value ), v_( in_place_value_t(), std::forward<A>(a)... )
     {
     }
 
@@ -228,7 +233,7 @@ public:
         >::type>
     constexpr result( in_place_error_t, A&&... a )
         noexcept( std::is_nothrow_constructible<E, A...>::value )
-		: i_( which::error ), v_( in_place_error_t(), std::forward<A>(a)... )
+        : i_( which::error ), v_( in_place_error_t(), std::forward<A>(a)... )
     {
     }
 
