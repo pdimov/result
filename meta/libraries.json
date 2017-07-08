@@ -1,0 +1,14 @@
+{
+    "key": "result",
+    "name": "Result",
+    "authors": [
+        "Peter Dimov"
+    ],
+    "maintainers": [
+        "Peter Dimov <pdimov -at- pdimov.com>"
+    ],
+    "description": "result<T, E>, a return type carrying either a value or an error.",
+    "category": [
+        "Containers", "Data"
+    ]
+}

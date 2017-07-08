@@ -1,0 +1,18 @@
+#  Boost.Result Library Test Jamfile
+#
+#  Copyright 2015-2017 Peter Dimov
+#
+#  Distributed under the Boost Software License, Version 1.0.
+#  See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt
+
+import testing ;
+import ../../config/checks/config : requires ;
+
+REQ = [ requires cxx11_variadic_templates cxx11_template_aliases cxx11_decltype cxx11_hdr_type_traits cxx11_constexpr cxx11_noexcept ] ;
+
+run result_default_construct.cpp : : : $(REQ) ;
+run result_value_construct.cpp : : : $(REQ) ;
+run result_error_construct.cpp : : : $(REQ) ;
+run result_copy_construct.cpp : : : $(REQ) ;
+run result_move_construct.cpp : : : $(REQ) ;
