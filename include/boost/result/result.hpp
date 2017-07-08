@@ -89,14 +89,14 @@ std::system_error error_code_to_exception( std::error_code const & e )
 
 struct in_place_value_t
 {
-    in_place_value_t() = default;
+    constexpr in_place_value_t() noexcept {}
 };
 
 constexpr in_place_value_t in_place_value;
 
 struct in_place_error_t
 {
-    in_place_error_t() = default;
+    constexpr in_place_error_t() noexcept {}
 };
 
 constexpr in_place_error_t in_place_error;
