@@ -4,7 +4,7 @@ This repository implements `result<T, E>`, a type intended to be returned
 from functions that can carry either a value of type `T` or an error of
 type `E`. `E` is usually `std::error_code` or compatible.
 
-Inspired by [Niall Douglas's Outcome library](../../ned14/outcome).
+Inspired by [Niall Douglas's Outcome library](https://github.com/ned14/outcome).
 
 ## Supported compilers
 
