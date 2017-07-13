@@ -11,6 +11,7 @@
 #include <boost/config.hpp>
 #include <system_error>
 #include <type_traits>
+#include <utility>
 #include <string>
 #include <cassert>
 
@@ -510,7 +511,7 @@ public:
 
     BOOST_CXX14_CONSTEXPR T const& operator*() const noexcept
     {
-        T* p = operator->();
+        T const* p = operator->();
 
         assert( p != 0 );
 
@@ -530,7 +531,7 @@ public:
 
     BOOST_CXX14_CONSTEXPR T const& operator*() const & noexcept
     {
-        T* p = operator->();
+        T const* p = operator->();
 
         assert( p != 0 );
 
@@ -558,19 +559,28 @@ public:
 
     // swap
 
-    BOOST_CXX14_CONSTEXPR void swap( result& r ) BOOST_NOEXCEPT_IF( BOOST_NOEXCEPT_EXPR( v_.t_.swap( r.v_.t_ ) ) && BOOST_NOEXCEPT_EXPR( v_.e_.swap( r.v_.e_ ) ) )
+    BOOST_CXX14_CONSTEXPR void swap( result& r ) /*noexcept(...)*/
     {
-        switch( i_ )
+        if( i_ == r.i_ )
         {
-        case which::value:
+            using std::swap;
 
-            swap( v_.t_, r.v_.t_ );
-            break;
+            switch( i_ )
+            {
+            case which::value:
 
-        case which::error:
+                swap( v_.t_, r.v_.t_ );
+                break;
 
-            swap( v_.e_, r.v_.e_ );
-            break;
+            case which::error:
+
+                swap( v_.e_, r.v_.e_ );
+                break;
+            }
+        }
+        else
+        {
+            std::swap( *this, r );
         }
     }
 };
