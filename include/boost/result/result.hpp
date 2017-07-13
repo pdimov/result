@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <utility>
 #include <string>
+#include <iosfwd>
 #include <cassert>
 
 //
@@ -247,9 +248,17 @@ public:
     {
     }
 
+private:
+
+    static constexpr bool has_nothrow_copy =
+        std::is_nothrow_copy_constructible<T>::value &&
+        std::is_nothrow_copy_constructible<E>::value;
+
+public:
+
     // copy
     result( result const& r )
-        noexcept( std::is_nothrow_copy_constructible<T>::value && std::is_nothrow_copy_constructible<E>::value  )
+        noexcept( has_nothrow_copy )
         : i_( r.i_ ), v_( in_place_empty_t() )
     {
         switch( i_ )
@@ -266,9 +275,17 @@ public:
         }
     }
 
+private:
+
+    static constexpr bool has_nothrow_move =
+        std::is_nothrow_move_constructible<T>::value &&
+        std::is_nothrow_move_constructible<E>::value;
+
+public:
+
     // move
     result( result&& r )
-        noexcept( std::is_nothrow_move_constructible<T>::value && std::is_nothrow_move_constructible<E>::value  )
+        noexcept( has_nothrow_move )
         : i_( r.i_ ), v_( in_place_empty_t() )
     {
         switch( i_ )
@@ -303,6 +320,52 @@ public:
     }
 
     // copy assignment
+
+    result& operator=( result const volatile& ) = delete;
+
+    template<class En2 = void, class En = typename std::enable_if<
+        std::is_void<En2>::value && has_nothrow_copy
+        >::type>
+    result& operator=( result const& r )
+        noexcept( std::is_nothrow_copy_assignable<T>::value && std::is_nothrow_copy_assignable<E>::value )
+    {
+        if( i_ == r.i_ )
+        {
+            switch( i_ )
+            {
+            case which::value:
+
+                v_.t_ = r.v_.t_;
+                break;
+
+            case which::error:
+
+                v_.e_ = r.v_.e_;
+                break;
+            }
+        }
+        else
+        {
+            this->~result();
+            ::new( static_cast<void*>( this ) ) result( r );
+        }
+
+        return *this;
+    }
+
+    template<class En2 = void, class En3 = void, class En = typename std::enable_if<
+        std::is_void<En2>::value && !has_nothrow_copy && has_nothrow_move
+        >::type>
+    result& operator=( result const& r )
+        noexcept( std::is_nothrow_move_assignable<result>::value )
+    {
+        operator=( result( r ) );
+        return *this;
+    }
+
+    template<class En2 = void, class En3 = void, class En4 = void, class En = typename std::enable_if<
+        std::is_void<En2>::value && !has_nothrow_copy && !has_nothrow_move
+        >::type>
     result& operator=( result const& r )
     {
         if( i_ == r.i_ )
@@ -339,14 +402,6 @@ public:
     }
 
     // move assignment
-
-private:
-
-    static constexpr bool has_nothrow_move =
-        std::is_nothrow_move_constructible<T>::value &&
-        std::is_nothrow_move_constructible<E>::value;
-
-public:
 
     template<class En2 = void, class En = typename std::enable_if<
         std::is_void<En2>::value && !has_nothrow_move
@@ -390,7 +445,7 @@ public:
         std::is_void<En2>::value && has_nothrow_move
         >::type>
     result& operator=( result&& r )
-        noexcept( std::is_nothrow_copy_assignable<T>::value && std::is_nothrow_copy_assignable<E>::value )
+        noexcept( std::is_nothrow_move_assignable<T>::value && std::is_nothrow_move_assignable<E>::value )
     {
         if( i_ == r.i_ )
         {
@@ -583,7 +638,61 @@ public:
             std::swap( *this, r );
         }
     }
+
+    template<class T2, class E2> BOOST_CXX14_CONSTEXPR bool operator==( result<T2, E2> const & r ) const
+    {
+        if( i_ != r.i_ ) return false;
+
+        switch( i_ )
+        {
+        case which::value:
+
+            return v_.t_ == r.v_.t_;
+
+        case which::error:
+
+            return v_.e_ == r.v_.e_;
+
+        default:
+
+            return false;
+        }
+    }
+
+    template<class T2, class E2> BOOST_CXX14_CONSTEXPR bool operator!=( result<T2, E2> const & r ) const
+    {
+        if( i_ != r.i_ ) return true;
+
+        switch( i_ )
+        {
+        case which::value:
+
+            return v_.t_ != r.v_.t_;
+
+        case which::error:
+
+            return v_.e_ != r.v_.e_;
+
+        default:
+
+            return false;
+        }
+    }
 };
+
+template<class Ch, class Tr, class T, class E> std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& os, result<T, E> const & r )
+{
+    if( r.has_value() )
+    {
+        os << "value:" << *r;
+    }
+    else
+    {
+        os << "error:" << r.error();
+    }
+
+    return os;
+}
 
 } // namespace result
 } // namespace boost
