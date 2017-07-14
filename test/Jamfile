@@ -17,3 +17,4 @@ run result_error_construct.cpp : : : $(REQ) ;
 run result_copy_construct.cpp : : : $(REQ) ;
 run result_move_construct.cpp : : : $(REQ) ;
 run result_copy_assign.cpp : : : $(REQ) ;
+run result_move_assign.cpp : : : $(REQ) ;
