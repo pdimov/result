@@ -16,6 +16,11 @@
 #include <iosfwd>
 #include <cassert>
 
+#if defined( BOOST_MSVC ) && BOOST_MSVC == 1900
+# pragma warning( push )
+# pragma warning( disable: 4522 ) // multiple assignment operators
+#endif
+
 //
 
 namespace boost
@@ -696,5 +701,9 @@ template<class Ch, class Tr, class T, class E> std::basic_ostream<Ch, Tr>& opera
 
 } // namespace result
 } // namespace boost
+
+#if defined( BOOST_MSVC ) && BOOST_MSVC == 1900
+# pragma warning( pop )
+#endif
 
 #endif // #ifndef BOOST_RESULT_RESULT_HPP_INCLUDED
