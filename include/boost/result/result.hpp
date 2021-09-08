@@ -6,13 +6,13 @@
 // https://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/variant2/variant.hpp>
+#include <boost/assert.hpp>
 #include <boost/config.hpp>
 #include <system_error>
 #include <type_traits>
 #include <utility>
 #include <string>
 #include <iosfwd>
-#include <cassert>
 
 //
 
@@ -237,7 +237,7 @@ public:
     {
         T* p = operator->();
 
-        assert( p != 0 );
+        BOOST_ASSERT( p != 0 );
 
         return *p;
     }
@@ -246,7 +246,7 @@ public:
     {
         T const* p = operator->();
 
-        assert( p != 0 );
+        BOOST_ASSERT( p != 0 );
 
         return *p;
     }
@@ -257,7 +257,7 @@ public:
     {
         T* p = operator->();
 
-        assert( p != 0 );
+        BOOST_ASSERT( p != 0 );
 
         return *p;
     }
@@ -266,7 +266,7 @@ public:
     {
         T const* p = operator->();
 
-        assert( p != 0 );
+        BOOST_ASSERT( p != 0 );
 
         return *p;
     }
