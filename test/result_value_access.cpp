@@ -18,6 +18,19 @@ struct X
     X& operator=( X const& ) = delete;
 };
 
+struct Y
+{
+};
+
+struct E
+{
+};
+
+E error_code_to_exception( Y const & e )
+{
+    return E();
+}
+
 int main()
 {
     {
@@ -194,6 +207,52 @@ int main()
         BOOST_TEST_EQ( result<X>( 1 ).value().v_, 1 );
         BOOST_TEST_EQ( (*result<X>( 1 )).v_, 1 );
         BOOST_TEST_EQ( result<X>( 1 )->v_, 1 );
+    }
+
+    {
+        auto ec = Y();
+
+        result<X, Y> r( ec );
+
+        BOOST_TEST( !r.has_value() );
+        BOOST_TEST( r.has_error() );
+
+        BOOST_TEST_NOT( r );
+        BOOST_TEST( !r );
+
+        BOOST_TEST_THROWS( r.value(), E );
+
+        BOOST_TEST_EQ( r.operator->(), static_cast<X*>(0) );
+    }
+
+    {
+        auto ec = Y();
+
+        result<X, Y> const r( ec );
+
+        BOOST_TEST( !r.has_value() );
+        BOOST_TEST( r.has_error() );
+
+        BOOST_TEST_NOT( r );
+        BOOST_TEST( !r );
+
+        BOOST_TEST_THROWS( r.value(), E );
+
+        BOOST_TEST_EQ( r.operator->(), static_cast<X*>(0) );
+    }
+
+    {
+        auto ec = Y();
+
+        BOOST_TEST(( !result<X, Y>( ec ).has_value() ));
+        BOOST_TEST(( result<X, Y>( ec ).has_error() ));
+
+        BOOST_TEST_NOT(( result<X, Y>( ec ) ));
+        BOOST_TEST(( !result<X, Y>( ec ) ));
+
+        BOOST_TEST_THROWS( (result<X, Y>( ec ).value()), E );
+
+        BOOST_TEST_EQ( (result<X, Y>( ec ).operator->()), static_cast<X*>(0) );
     }
 
     return boost::report_errors();
