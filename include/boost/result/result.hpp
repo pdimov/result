@@ -306,6 +306,8 @@ public:
         r1.swap( r2 );
     }
 
+    // equality
+
     friend constexpr bool operator==( result const & r1, result const & r2 )
         noexcept( noexcept( r1.v_ == r2.v_ ) )
     {
@@ -313,9 +315,9 @@ public:
     }
 
     friend constexpr bool operator!=( result const & r1, result const & r2 )
-        noexcept( noexcept( r1.v_ != r2.v_ ) )
+        noexcept( noexcept( !( r1 == r2 ) ) )
     {
-        return r1.v_ != r2.v_;
+        return !( r1 == r2 );
     }
 };
 
