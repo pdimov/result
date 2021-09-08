@@ -5,16 +5,28 @@
 import testing ;
 import ../../config/checks/config : requires ;
 
-REQ = [ requires cxx11_variadic_templates cxx11_template_aliases cxx11_decltype cxx11_hdr_type_traits cxx11_constexpr cxx11_noexcept ] ;
+project
+  : default-build
 
-run result_default_construct.cpp : : : $(REQ) ;
-run result_value_construct.cpp : : : $(REQ) ;
-run result_error_construct.cpp : : : $(REQ) ;
-run result_copy_construct.cpp : : : $(REQ) ;
-run result_move_construct.cpp : : : $(REQ) ;
-run result_copy_assign.cpp : : : $(REQ) ;
-run result_move_assign.cpp : : : $(REQ) ;
-run result_value_access.cpp : : : $(REQ) ;
-run result_error_access.cpp : : : $(REQ) ;
-run result_swap.cpp : : : $(REQ) ;
-run result_eq.cpp : : : $(REQ) ;
+    <warnings>extra
+
+  : requirements
+
+    [ requires cxx11_variadic_templates cxx11_template_aliases cxx11_decltype cxx11_constexpr cxx11_noexcept ]
+
+    <toolset>msvc:<warnings-as-errors>on
+    <toolset>gcc:<warnings-as-errors>on
+    <toolset>clang:<warnings-as-errors>on
+  ;
+
+run result_default_construct.cpp ;
+run result_value_construct.cpp ;
+run result_error_construct.cpp ;
+run result_copy_construct.cpp ;
+run result_move_construct.cpp ;
+run result_copy_assign.cpp ;
+run result_move_assign.cpp ;
+run result_value_access.cpp ;
+run result_error_access.cpp ;
+run result_swap.cpp ;
+run result_eq.cpp ;
