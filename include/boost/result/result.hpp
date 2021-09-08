@@ -298,14 +298,14 @@ public:
         v_.swap( r.v_ );
     }
 
-    template<class T2, class E2> BOOST_CXX14_CONSTEXPR bool operator==( result<T2, E2> const & r ) const
+    friend constexpr bool operator==( result const & r1, result const & r2 )
     {
-        return v_ == r.v_;
+        return r1.v_ == r2.v_;
     }
 
-    template<class T2, class E2> BOOST_CXX14_CONSTEXPR bool operator!=( result<T2, E2> const & r ) const
+    friend constexpr bool operator!=( result const & r1, result const & r2 )
     {
-        return v_ != r.v_;
+        return r1.v_ != r2.v_;
     }
 };
 
