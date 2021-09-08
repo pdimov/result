@@ -28,5 +28,5 @@ run result_copy_assign.cpp ;
 run result_move_assign.cpp ;
 run result_value_access.cpp ;
 run result_error_access.cpp ;
-run result_swap.cpp ;
+run result_swap.cpp : : : <toolset>gcc-10:<warnings-as-errors>off ;
 run result_eq.cpp ;
