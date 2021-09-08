@@ -107,6 +107,52 @@ int main()
     }
 
     {
+        auto ec = make_error_code( std::errc::invalid_argument );
+
+        result<int> r( ec );
+
+        BOOST_TEST( !r.has_value() );
+        BOOST_TEST( r.has_error() );
+
+        BOOST_TEST_NOT( r );
+        BOOST_TEST( !r );
+
+        BOOST_TEST_THROWS( r.value(), std::system_error );
+
+        BOOST_TEST_EQ( r.operator->(), static_cast<int*>(0) );
+    }
+
+    {
+        auto ec = make_error_code( std::errc::invalid_argument );
+
+        result<int> const r( ec );
+
+        BOOST_TEST( !r.has_value() );
+        BOOST_TEST( r.has_error() );
+
+        BOOST_TEST_NOT( r );
+        BOOST_TEST( !r );
+
+        BOOST_TEST_THROWS( r.value(), std::system_error );
+
+        BOOST_TEST_EQ( r.operator->(), static_cast<int*>(0) );
+    }
+
+    {
+        auto ec = make_error_code( std::errc::invalid_argument );
+
+        BOOST_TEST( !result<int>( ec ).has_value() );
+        BOOST_TEST( result<int>( ec ).has_error() );
+
+        BOOST_TEST_NOT( result<int>( ec ) );
+        BOOST_TEST( !result<int>( ec ) );
+
+        BOOST_TEST_THROWS( result<int>( ec ).value(), std::system_error );
+
+        BOOST_TEST_EQ( result<int>( ec ).operator->(), static_cast<int*>(0) );
+    }
+
+    {
         result<X> r( 1 );
 
         BOOST_TEST( r.has_value() );
