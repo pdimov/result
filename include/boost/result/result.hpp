@@ -6,6 +6,7 @@
 // https://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/variant2/variant.hpp>
+#include <boost/throw_exception.hpp>
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
 #include <system_error>
@@ -25,7 +26,7 @@ namespace result
 
 BOOST_NORETURN void throw_exception_from_error_code( std::error_code const & e )
 {
-    throw std::system_error( e );
+    boost::throw_exception( std::system_error( e ) );
 }
 
 // in_place_*
