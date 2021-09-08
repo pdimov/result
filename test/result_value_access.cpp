@@ -26,9 +26,9 @@ struct E
 {
 };
 
-E error_code_to_exception( Y const & e )
+BOOST_NORETURN void throw_exception_from_error_code( Y const & )
 {
-    return E();
+    throw E();
 }
 
 int main()

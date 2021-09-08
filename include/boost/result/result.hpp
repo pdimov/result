@@ -21,11 +21,11 @@ namespace boost
 namespace result
 {
 
-// error_code_to_exception
+// throw_exception_from_error_code
 
-std::system_error error_code_to_exception( std::error_code const & e )
+BOOST_NORETURN void throw_exception_from_error_code( std::error_code const & e )
 {
-    return std::system_error( e );
+    throw std::system_error( e );
 }
 
 // in_place_*
@@ -177,7 +177,7 @@ public:
         }
         else
         {
-            throw error_code_to_exception( *variant2::get_if<1>( &v_ ) );
+            throw_exception_from_error_code( *variant2::get_if<1>( &v_ ) );
         }
     }
 
@@ -191,7 +191,7 @@ public:
         }
         else
         {
-            throw error_code_to_exception( *variant2::get_if<1>( &v_ ) );
+            throw_exception_from_error_code( *variant2::get_if<1>( &v_ ) );
         }
     }
 
@@ -203,7 +203,7 @@ public:
         }
         else
         {
-            throw error_code_to_exception( *variant2::get_if<1>( &v_ ) );
+            throw_exception_from_error_code( *variant2::get_if<1>( &v_ ) );
         }
     }
 
