@@ -301,9 +301,9 @@ public:
     }
 
     friend BOOST_CXX14_CONSTEXPR void swap( result & r1, result & r2 )
-        noexcept( noexcept( r1.v_.swap( r2.v_ ) ) )
+        noexcept( noexcept( r1.swap( r2 ) ) )
     {
-        r1.v_.swap( r2.v_ );
+        r1.swap( r2 );
     }
 
     friend constexpr bool operator==( result const & r1, result const & r2 )
