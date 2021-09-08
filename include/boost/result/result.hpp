@@ -285,7 +285,8 @@ public:
 
     // error access
 
-    BOOST_CXX14_CONSTEXPR E error() const noexcept
+    BOOST_CXX14_CONSTEXPR E error() const
+        noexcept( std::is_nothrow_default_constructible<E>::value && std::is_nothrow_copy_constructible<E>::value )
     {
         E const * p = variant2::get_if<1>( &v_ );
         return p? *p: E();
@@ -293,22 +294,26 @@ public:
 
     // swap
 
-    BOOST_CXX14_CONSTEXPR void swap( result& r ) /*noexcept(...)*/
+    BOOST_CXX14_CONSTEXPR void swap( result& r )
+        noexcept( noexcept( v_.swap( r.v_ ) ) )
     {
         v_.swap( r.v_ );
     }
 
     friend BOOST_CXX14_CONSTEXPR void swap( result & r1, result & r2 )
+        noexcept( noexcept( r1.v_.swap( r2.v_ ) ) )
     {
         r1.v_.swap( r2.v_ );
     }
 
     friend constexpr bool operator==( result const & r1, result const & r2 )
+        noexcept( noexcept( r1.v_ == r2.v_ ) )
     {
         return r1.v_ == r2.v_;
     }
 
     friend constexpr bool operator!=( result const & r1, result const & r2 )
+        noexcept( noexcept( r1.v_ != r2.v_ ) )
     {
         return r1.v_ != r2.v_;
     }
