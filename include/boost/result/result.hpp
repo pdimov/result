@@ -298,6 +298,11 @@ public:
         v_.swap( r.v_ );
     }
 
+    friend BOOST_CXX14_CONSTEXPR void swap( result & r1, result & r2 )
+    {
+        r1.v_.swap( r2.v_ );
+    }
+
     friend constexpr bool operator==( result const & r1, result const & r2 )
     {
         return r1.v_ == r2.v_;
