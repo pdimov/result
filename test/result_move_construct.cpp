@@ -1,10 +1,6 @@
-
-// Copyright 2017 Peter Dimov.
-//
+// Copyright 2017, 2021 Peter Dimov.
 // Distributed under the Boost Software License, Version 1.0.
-//
-// See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt
+// https://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/result/result.hpp>
 #include <boost/core/lightweight_test.hpp>
@@ -33,6 +29,17 @@ struct X
     ~X() { --instances; }
 };
 
+bool operator==( X const & x1, X const & x2 )
+{
+    return x1.v_ == x2.v_;
+}
+
+std::ostream& operator<<( std::ostream& os, X const & x )
+{
+    os << "X:" << x.v_;
+    return os;
+}
+
 int X::instances = 0;
 
 int main()
@@ -41,19 +48,19 @@ int main()
         result<int> r;
         result<int> r2( std::move( r ) );
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
+        BOOST_TEST( r2.has_value() );
+        BOOST_TEST( !r2.has_error() );
 
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( r2.value(), 0 );
     }
 
     {
         result<int> r2( result<int>{} );
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
+        BOOST_TEST( r2.has_value() );
+        BOOST_TEST( !r2.has_error() );
 
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( r2.value(), 0 );
     }
 
     BOOST_TEST_EQ( X::instances, 0 );
@@ -62,12 +69,12 @@ int main()
         result<X> r;
         result<X> r2( std::move( r ) );
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
+        BOOST_TEST( r2.has_value() );
+        BOOST_TEST( !r2.has_error() );
 
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( r2.value(), X() );
 
-        BOOST_TEST_EQ( X::instances, 0 );
+        BOOST_TEST_EQ( X::instances, 2 );
     }
 
     BOOST_TEST_EQ( X::instances, 0 );
@@ -75,12 +82,12 @@ int main()
     {
         result<X> r2( result<X>{} );
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
+        BOOST_TEST( r2.has_value() );
+        BOOST_TEST( !r2.has_error() );
 
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( r2.value(), X() );
 
-        BOOST_TEST_EQ( X::instances, 0 );
+        BOOST_TEST_EQ( X::instances, 1 );
     }
 
     BOOST_TEST_EQ( X::instances, 0 );

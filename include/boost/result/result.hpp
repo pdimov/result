@@ -1,12 +1,9 @@
 #ifndef BOOST_RESULT_RESULT_HPP_INCLUDED
 #define BOOST_RESULT_RESULT_HPP_INCLUDED
 
-// Copyright 2017 Peter Dimov.
-//
+// Copyright 2017, 2021 Peter Dimov.
 // Distributed under the Boost Software License, Version 1.0.
-//
-// See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt
+// https://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/config.hpp>
 #include <system_error>
@@ -27,63 +24,6 @@ namespace boost
 {
 namespace result
 {
-
-// result_errc
-
-enum class result_errc
-{
-    not_initialized = 1,
-};
-
-} // namespace result
-} // namespace boost
-
-namespace std
-{
-
-template<> struct is_error_code_enum< boost::result::result_errc >: std::true_type {};
-
-} // namespace std
-
-namespace boost
-{
-namespace result
-{
-
-class result_category_impl: public std::error_category
-{
-public:
-
-    virtual const char * name() const noexcept
-    {
-        return "boost::result";
-    }
-
-    virtual std::string message( int e ) const
-    {
-        switch( e )
-        {
-        case static_cast<int>( result_errc::not_initialized ):
-
-            return "result<> not initialized";
-
-        default:
-
-            return "unknown result<> error";
-        }
-    }
-};
-
-std::error_category const& result_category()
-{
-    static result_category_impl cat;
-    return cat;
-}
-
-std::error_code make_error_code( result_errc e )
-{
-    return std::error_code( static_cast<int>( e ), result_category() );
-}
 
 // error_code_to_exception
 
@@ -157,9 +97,11 @@ public:
     // default
     template<class En2 = void, class En = typename std::enable_if<
         std::is_void<En2>::value &&
-        std::is_nothrow_constructible<E, result_errc>::value
+        std::is_default_constructible<T>::value
         >::type>
-    constexpr result() noexcept: i_( which::error ), v_( in_place_error_t(), result_errc::not_initialized )
+    constexpr result()
+        noexcept( std::is_nothrow_default_constructible<T>::value )
+        : i_( which::value ), v_( in_place_value_t() )
     {
     }
 

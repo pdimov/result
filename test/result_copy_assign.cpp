@@ -1,10 +1,6 @@
-
-// Copyright 2017 Peter Dimov.
-//
+// Copyright 2017, 2021 Peter Dimov.
 // Distributed under the Boost Software License, Version 1.0.
-//
-// See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt
+// https://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/result/result.hpp>
 #include <boost/core/lightweight_test.hpp>
@@ -21,7 +17,7 @@ struct X
 
     int v_;
 
-    explicit X( int v ): v_( v ) { ++instances; }
+    explicit X( int v = 0 ): v_( v ) { ++instances; }
 
     X( X const& r ): v_( r.v_ ) { ++instances; }
 
@@ -81,11 +77,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -95,11 +86,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -108,11 +94,6 @@ int main()
         result<int> r2( ENOENT, std::generic_category() );
 
         r2 = r;
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -123,11 +104,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -136,11 +112,6 @@ int main()
         result<int> r2( 1 );
 
         r2 = r;
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -151,11 +122,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -165,16 +131,11 @@ int main()
         result<X> r;
         result<X> r2;
 
-        BOOST_TEST_EQ( X::instances, 0 );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         r2 = r;
 
-        BOOST_TEST_EQ( X::instances, 0 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -185,16 +146,11 @@ int main()
         result<X> r;
         result<X> r2( 1 );
 
-        BOOST_TEST_EQ( X::instances, 1 );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         r2 = r;
 
-        BOOST_TEST_EQ( X::instances, 0 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -205,16 +161,11 @@ int main()
         result<X> r;
         result<X> r2( ENOENT, std::generic_category() );
 
-        BOOST_TEST_EQ( X::instances, 0 );
+        BOOST_TEST_EQ( X::instances, 1 );
 
         r2 = r;
 
-        BOOST_TEST_EQ( X::instances, 0 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -225,16 +176,11 @@ int main()
         result<X> const r;
         result<X> r2;
 
-        BOOST_TEST_EQ( X::instances, 0 );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         r2 = r;
 
-        BOOST_TEST_EQ( X::instances, 0 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -245,16 +191,11 @@ int main()
         result<X> const r;
         result<X> r2( 1 );
 
-        BOOST_TEST_EQ( X::instances, 1 );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         r2 = r;
 
-        BOOST_TEST_EQ( X::instances, 0 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -265,16 +206,11 @@ int main()
         result<X> const r;
         result<X> r2( ENOENT, std::generic_category() );
 
-        BOOST_TEST_EQ( X::instances, 0 );
+        BOOST_TEST_EQ( X::instances, 1 );
 
         r2 = r;
 
-        BOOST_TEST_EQ( X::instances, 0 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), make_error_code( result_errc::not_initialized ) );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -289,11 +225,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value(), 0 );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -303,11 +234,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value(), 0 );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -316,11 +242,6 @@ int main()
         result<int> r2( ENOENT, std::generic_category() );
 
         r2 = r;
-
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value(), 0 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -331,11 +252,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value(), 0 );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -344,11 +260,6 @@ int main()
         result<int> r2( 1 );
 
         r2 = r;
-
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value(), 0 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -359,11 +270,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value(), 0 );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -373,16 +279,11 @@ int main()
         result<X> r( 1 );
         result<X> r2;
 
-        BOOST_TEST_EQ( X::instances, 1 );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         r2 = r;
 
         BOOST_TEST_EQ( X::instances, 2 );
-
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value().v_, 1 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -399,11 +300,6 @@ int main()
 
         BOOST_TEST_EQ( X::instances, 2 );
 
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value().v_, 1 );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -419,11 +315,6 @@ int main()
 
         BOOST_TEST_EQ( X::instances, 2 );
 
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value().v_, 1 );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -433,16 +324,11 @@ int main()
         result<X> const r( 1 );
         result<X> r2;
 
-        BOOST_TEST_EQ( X::instances, 1 );
+        BOOST_TEST_EQ( X::instances, 2 );
 
         r2 = r;
 
         BOOST_TEST_EQ( X::instances, 2 );
-
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value().v_, 1 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -459,11 +345,6 @@ int main()
 
         BOOST_TEST_EQ( X::instances, 2 );
 
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value().v_, 1 );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -478,11 +359,6 @@ int main()
         r2 = r;
 
         BOOST_TEST_EQ( X::instances, 2 );
-
-        BOOST_TEST( r2.has_value() );
-        BOOST_TEST( !r2.has_error() );
-
-        BOOST_TEST_EQ( r2.value().v_, 1 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -499,11 +375,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -515,11 +386,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -530,11 +396,6 @@ int main()
         result<int> r2( ENOENT, std::generic_category() );
 
         r2 = r;
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -547,11 +408,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -562,11 +418,6 @@ int main()
         result<int> r2( 1 );
 
         r2 = r;
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -579,11 +430,6 @@ int main()
 
         r2 = r;
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -595,16 +441,11 @@ int main()
         result<X> r( ec );
         result<X> r2;
 
-        BOOST_TEST_EQ( X::instances, 0 );
+        BOOST_TEST_EQ( X::instances, 1 );
 
         r2 = r;
 
         BOOST_TEST_EQ( X::instances, 0 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -623,11 +464,6 @@ int main()
 
         BOOST_TEST_EQ( X::instances, 0 );
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -645,11 +481,6 @@ int main()
 
         BOOST_TEST_EQ( X::instances, 0 );
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -661,16 +492,11 @@ int main()
         result<X> const r( ec );
         result<X> r2;
 
-        BOOST_TEST_EQ( X::instances, 0 );
+        BOOST_TEST_EQ( X::instances, 1 );
 
         r2 = r;
 
         BOOST_TEST_EQ( X::instances, 0 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -689,11 +515,6 @@ int main()
 
         BOOST_TEST_EQ( X::instances, 0 );
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -710,11 +531,6 @@ int main()
         r2 = r;
 
         BOOST_TEST_EQ( X::instances, 0 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error(), ec );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -735,11 +551,6 @@ int main()
 
         BOOST_TEST_EQ( Y::instances, 2 );
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error().v_, 1 );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -754,11 +565,6 @@ int main()
         r2 = r;
 
         BOOST_TEST_EQ( Y::instances, 2 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error().v_, 1 );
 
         BOOST_TEST_EQ( r, r2 );
     }
@@ -775,11 +581,6 @@ int main()
 
         BOOST_TEST_EQ( Y::instances, 2 );
 
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error().v_, 1 );
-
         BOOST_TEST_EQ( r, r2 );
     }
 
@@ -794,11 +595,6 @@ int main()
         r2 = r;
 
         BOOST_TEST_EQ( Y::instances, 2 );
-
-        BOOST_TEST( !r2.has_value() );
-        BOOST_TEST( r2.has_error() );
-
-        BOOST_TEST_EQ( r2.error().v_, 1 );
 
         BOOST_TEST_EQ( r, r2 );
     }
