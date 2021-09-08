@@ -8,11 +8,11 @@ Inspired by [Niall Douglas's Outcome library](https://github.com/ned14/outcome).
 
 ## Supported compilers
 
-* g++ 4.7 or later
-* clang++ 3.5 or later
-* Visual Studio 2015, 2017
+* g++ 4.8 or later, with -std=c++11 or above
+* clang++ 3.9 or later, with -std=c++11 or above
+* Visual Studio 2015, 2017, 2019
 
-Tested on [Travis](https://travis-ci.org/pdimov/result/) and [Appveyor](https://ci.appveyor.com/project/pdimov/result/).
+Tested on [Github Actions](https://github.com/pdimov/result/actions) and [Appveyor](https://ci.appveyor.com/project/pdimov/result/).
 
 ## Documentation
 
